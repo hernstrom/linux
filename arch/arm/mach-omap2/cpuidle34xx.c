@@ -68,36 +68,6 @@ static struct omap3_idle_statedata omap3_idle_data[] = {
 		.per_min_state = PWRDM_POWER_ON,
 		.flags = OMAP_CPUIDLE_CX_NO_CLKDM_IDLE,
 	},
-	{
-		.mpu_state = PWRDM_POWER_ON,
-		.core_state = PWRDM_POWER_ON,
-		.per_min_state = PWRDM_POWER_RET,
-	},
-	{
-		.mpu_state = PWRDM_POWER_RET,
-		.core_state = PWRDM_POWER_ON,
-		.per_min_state = PWRDM_POWER_RET,
-	},
-	{
-		.mpu_state = PWRDM_POWER_OFF,
-		.core_state = PWRDM_POWER_ON,
-		.per_min_state = PWRDM_POWER_RET,
-	},
-	{
-		.mpu_state = PWRDM_POWER_RET,
-		.core_state = PWRDM_POWER_RET,
-		.per_min_state = PWRDM_POWER_OFF,
-	},
-	{
-		.mpu_state = PWRDM_POWER_OFF,
-		.core_state = PWRDM_POWER_RET,
-		.per_min_state = PWRDM_POWER_OFF,
-	},
-	{
-		.mpu_state = PWRDM_POWER_OFF,
-		.core_state = PWRDM_POWER_OFF,
-		.per_min_state = PWRDM_POWER_OFF,
-	},
 };
 
 /**
@@ -112,7 +82,7 @@ static int omap3_enter_idle(struct cpuidle_device *dev,
 {
 	struct omap3_idle_statedata *cx = &omap3_idle_data[index];
 
-	if (omap_irq_pending() || need_resched())
+#	if (omap_irq_pending() || need_resched())
 		goto return_sleep_time;
 
 	/* Deny idle for C1 */
@@ -268,54 +238,6 @@ static struct cpuidle_driver omap3_idle_driver = {
 			.flags		  = CPUIDLE_FLAG_TIME_VALID,
 			.name		  = "C1",
 			.desc		  = "MPU ON + CORE ON",
-		},
-		{
-			.enter		  = omap3_enter_idle_bm,
-			.exit_latency	  = 10 + 10,
-			.target_residency = 30,
-			.flags		  = CPUIDLE_FLAG_TIME_VALID,
-			.name		  = "C2",
-			.desc		  = "MPU ON + CORE ON",
-		},
-		{
-			.enter		  = omap3_enter_idle_bm,
-			.exit_latency	  = 50 + 50,
-			.target_residency = 300,
-			.flags		  = CPUIDLE_FLAG_TIME_VALID,
-			.name		  = "C3",
-			.desc		  = "MPU RET + CORE ON",
-		},
-		{
-			.enter		  = omap3_enter_idle_bm,
-			.exit_latency	  = 1500 + 1800,
-			.target_residency = 4000,
-			.flags		  = CPUIDLE_FLAG_TIME_VALID,
-			.name		  = "C4",
-			.desc		  = "MPU OFF + CORE ON",
-		},
-		{
-			.enter		  = omap3_enter_idle_bm,
-			.exit_latency	  = 2500 + 7500,
-			.target_residency = 12000,
-			.flags		  = CPUIDLE_FLAG_TIME_VALID,
-			.name		  = "C5",
-			.desc		  = "MPU RET + CORE RET",
-		},
-		{
-			.enter		  = omap3_enter_idle_bm,
-			.exit_latency	  = 3000 + 8500,
-			.target_residency = 15000,
-			.flags		  = CPUIDLE_FLAG_TIME_VALID,
-			.name		  = "C6",
-			.desc		  = "MPU OFF + CORE RET",
-		},
-		{
-			.enter		  = omap3_enter_idle_bm,
-			.exit_latency	  = 10000 + 30000,
-			.target_residency = 30000,
-			.flags		  = CPUIDLE_FLAG_TIME_VALID,
-			.name		  = "C7",
-			.desc		  = "MPU OFF + CORE OFF",
 		},
 	},
 	.state_count = ARRAY_SIZE(omap3_idle_data),
