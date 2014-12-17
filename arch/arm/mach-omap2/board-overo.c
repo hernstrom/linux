@@ -25,6 +25,7 @@
 #include <linux/init.h>
 #include <linux/io.h>
 #include <linux/gpio.h>
+#include <linux/cpu.h>
 #include <linux/kernel.h>
 #include <linux/platform_device.h>
 #include <linux/i2c/twl.h>
@@ -482,6 +483,9 @@ static void __init overo_init(void)
 	overo_init_led();
 	overo_init_keys();
 	omap_twl4030_audio_init("overo", NULL);
+
+	// attempt to force polling mode
+	cpu_idle_poll_ctrl(true);
 
 	/* Ensure SDRC pins are mux'd for self-refresh */
 	omap_mux_init_signal("sdrc_cke0", OMAP_PIN_OUTPUT);
